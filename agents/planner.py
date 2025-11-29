@@ -28,9 +28,14 @@ def plan_workflow(ticket_text: str, model: str = "gpt-4.1") -> dict:
     # Depending on SDK, parsed JSON may be in message content or a helper field.
     # Here we assume 'message.parsed' exists when using response_format=json_object.
     message = response.choices[0].message
+    # Prefer parsed JSON if available (because response_format=json_object)
     if hasattr(message, "parsed") and message.parsed is not None:
-        return message.parsed
+        plan = message.parsed
+    else:
+        import json
+        plan = json.loads(message.content)
 
-    # Fallback: parse JSON from content
-    import json
-    return json.loads(message.content)
+    # ⭐ ADD THIS: attach original ticket so executor can resolve $ticket
+    plan["ticket_text"] = ticket_text
+
+    return plan

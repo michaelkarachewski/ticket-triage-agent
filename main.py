@@ -1,4 +1,5 @@
 from agents.planner import plan_workflow
+from agents.executor import execute_plan
 
 if __name__ == "__main__":
 
@@ -7,8 +8,14 @@ if __name__ == "__main__":
     plan = plan_workflow(ticket, model="gpt-4.1") 
     print("PLAN:")
     print(plan)
+
+    #test executor 
+    execute = execute_plan(plan, ticket)
+    print("EXECUTE:")
+    print(execute)
 # OUTPUT:
 # {
+#   "ticket_text": "The API returns 500 errors when uploading CSV files in production for EU customers.",
 #   "steps": [
 #     {
 #       "id": 1,
