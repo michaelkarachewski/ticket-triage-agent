@@ -13,6 +13,7 @@ def load_planner_prompt() -> str:
 def plan_workflow(ticket_text: str, model: str = "gpt-4.1") -> dict:
     """
     Calls an LLM to produce a JSON workflow plan for the given ticket.
+    Includes token usage needed for cost evaluation.
     """
     system_prompt = load_planner_prompt()
 
@@ -25,17 +26,26 @@ def plan_workflow(ticket_text: str, model: str = "gpt-4.1") -> dict:
         response_format={"type": "json_object"}
     )
 
-    # Depending on SDK, parsed JSON may be in message content or a helper field.
-    # Here we assume 'message.parsed' exists when using response_format=json_object.
+    # Extract the main message
     message = response.choices[0].message
-    # Prefer parsed JSON if available (because response_format=json_object)
+
+    # Prefer parsed JSON (because response_format=json_object)
     if hasattr(message, "parsed") and message.parsed is not None:
         plan = message.parsed
     else:
         import json
         plan = json.loads(message.content)
 
-    # ⭐ ADD THIS: attach original ticket so executor can resolve $ticket
+    # Attach original ticket text (needed for $ticket resolution)
     plan["ticket_text"] = ticket_text
+
+    # ⭐ ADD THIS: attach usage metadata
+    # The evaluator will read this to compute cost.
+    usage = response.usage
+    plan["_usage"] = {
+        "prompt": usage.prompt_tokens,
+        "completion": usage.completion_tokens,
+        "total": usage.total_tokens,
+    }
 
     return plan

@@ -1,0 +1,29 @@
+[
+  {
+    "name": "critical csv 500",
+    "ticket": "The API returns 500 errors when uploading CSV files in production for EU customers.",
+    "expected": {
+      "priority": "critical",
+      "should_alert": true,
+      "should_match_known_issue": true
+    }
+  },
+  {
+    "name": "feature request – dark mode",
+    "ticket": "Customer is requesting a dark mode setting for the web app.",
+    "expected": {
+      "priority": "normal",
+      "should_alert": false,
+      "should_match_known_issue": false
+    }
+  },
+  {
+    "name": "noisy csv issue",
+    "ticket": "uhh the csv uploader is like kinda broken? keeps 500ing idk",
+    "expected": {
+      "priority": "high",
+      "should_alert": true,
+      "should_match_known_issue": true
+    }
+  }
+]
