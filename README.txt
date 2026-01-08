@@ -1,13 +1,14 @@
 TICKET TRIAGE AGENT – BUILT FROM SCRATCH
 
-This project implements a simple end-to-end ticket triage agent system, built without Bedrock Agents, LangGraph, or any orchestration framework.
+This project implements an end-to-end ticket triage agent system, built without managed services or orchestration frameworks to gain deeper understanding.
 
-The goal is to learn:
+The goal is to showcase:
 
-• LLM-based planning
-• Tool calling
+• LLM-based planning best practices
+• Agent/executor loops
+• Agent runtime guardrails
 • Variable-based workflow state
-• Deterministic execution
+• Deterministic tool calling and plan execution in code
 • Agent-level evaluation (correctness, cost, latency)
 • Model comparison across OpenAI models
 
@@ -89,9 +90,8 @@ C. Performance
 • Cost based on token usage and model pricing
 
 Why agent evals are different:
-Traditional ML (e.g., CV) or Model Evals has fixed ground truth.
-Agent workflows have branching logic and shared state, so evals are rule-based instead of exact matching.
-We’re not testing what steps the plan contains (requiring ground truth, deterministic), but whether the plan adheres to the system designed 
+Agent workflows can have complex branching logic, so evals aren't trying to match plan steps exactly from ground truth.
+Instead, I'm testing whether the plan adheres to designed system by checking if the end result matches expected variable state. For example, was a notification dispatched for a high priority ticket. 
 
 Recommended number of evals:
 
